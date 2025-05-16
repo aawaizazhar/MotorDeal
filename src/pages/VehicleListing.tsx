@@ -25,6 +25,7 @@ const VehicleListing = () => {
   const [minYear, setMinYear] = useState<number | undefined>(undefined);
   const [maxYear, setMaxYear] = useState<number | undefined>(undefined);
   const [condition, setCondition] = useState<string>("");
+  const [category, setCategory] = useState<string>("");
   const [sort, setSort] = useState<string>("newest");
 
   const makes = getMakes();
@@ -41,6 +42,7 @@ const VehicleListing = () => {
     const minYearParam = searchParams.get("minYear");
     const maxYearParam = searchParams.get("maxYear");
     const conditionParam = searchParams.get("condition") || "";
+    const categoryParam = searchParams.get("category") || "";
     const sortParam = searchParams.get("sort") || "newest";
     
     setMake(makeParam);
@@ -50,6 +52,7 @@ const VehicleListing = () => {
     setMinYear(minYearParam ? parseInt(minYearParam) : undefined);
     setMaxYear(maxYearParam ? parseInt(maxYearParam) : undefined);
     setCondition(conditionParam);
+    setCategory(categoryParam);
     setSort(sortParam);
   }, [searchParams]);
   
@@ -63,6 +66,7 @@ const VehicleListing = () => {
       minPrice,
       maxPrice,
       condition: condition as any || undefined,
+      category: category || undefined,
     });
     
     // Apply sorting
@@ -77,7 +81,7 @@ const VehicleListing = () => {
     }
     
     setVehicles(filtered);
-  }, [make, model, minYear, maxYear, minPrice, maxPrice, condition, sort]);
+  }, [make, model, minYear, maxYear, minPrice, maxPrice, condition, category, sort]);
   
   const applyFilters = () => {
     const params = new URLSearchParams();
@@ -89,6 +93,7 @@ const VehicleListing = () => {
     if (minYear) params.append("minYear", minYear.toString());
     if (maxYear) params.append("maxYear", maxYear.toString());
     if (condition) params.append("condition", condition);
+    if (category) params.append("category", category);
     if (sort) params.append("sort", sort);
     
     setSearchParams(params);
@@ -102,6 +107,7 @@ const VehicleListing = () => {
     setMinYear(undefined);
     setMaxYear(undefined);
     setCondition("");
+    setCategory("");
     setSort("newest");
     setSearchParams({});
   };
@@ -238,6 +244,7 @@ const VehicleListing = () => {
               <div className="flex justify-between items-center mb-6">
                 <p className="text-gray-600">
                   Showing <span className="font-medium">{vehicles.length}</span> results
+                  {category && <span> in <strong>{category}</strong></span>}
                 </p>
                 
                 <div className="flex items-center gap-2">

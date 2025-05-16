@@ -266,7 +266,8 @@ export const getFilteredVehicles = (
     minPrice?: number;
     maxPrice?: number;
     condition?: 'New' | 'Used' | 'Certified Pre-Owned';
-  }
+    category?: string;
+  } = {}
 ): Vehicle[] => {
   return vehicles.filter(vehicle => {
     // Filter by make
@@ -302,6 +303,18 @@ export const getFilteredVehicles = (
     // Filter by condition
     if (filters.condition && vehicle.condition !== filters.condition) {
       return false;
+    }
+    
+    // Filter by category (checking against description, fuel type, and body style)
+    if (filters.category) {
+      const categoryMatch = 
+        vehicle.description.toLowerCase().includes(filters.category.toLowerCase()) ||
+        vehicle.fuelType.toLowerCase() === filters.category.toLowerCase() ||
+        vehicle.bodyStyle.toLowerCase() === filters.category.toLowerCase();
+      
+      if (!categoryMatch) {
+        return false;
+      }
     }
     
     return true;

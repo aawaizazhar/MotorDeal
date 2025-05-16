@@ -1,6 +1,7 @@
 
-import { Link } from "react-router-dom";
+import { useState } from "react";
 import { ChevronRight } from "lucide-react";
+import { Vehicle, getFilteredVehicles } from "@/data/vehicles";
 
 // Define the category type
 interface Category {
@@ -24,7 +25,16 @@ const categories: Category[] = [
   { id: "convertible", name: "Convertible" }
 ];
 
-const PopularCategories = () => {
+interface PopularCategoriesProps {
+  onCategorySelect: (category: string) => void;
+  selectedCategory: string;
+}
+
+const PopularCategories = ({ onCategorySelect, selectedCategory }: PopularCategoriesProps) => {
+  const handleCategoryClick = (categoryId: string) => {
+    onCategorySelect(categoryId === selectedCategory ? "" : categoryId);
+  };
+
   return (
     <section className="py-12 bg-white">
       <div className="container mx-auto px-4">
@@ -33,18 +43,18 @@ const PopularCategories = () => {
         <div className="relative">
           <div className="flex items-center gap-3 overflow-x-auto pb-4 scrollbar-hide">
             {categories.map((category) => (
-              <Link 
-                to={`/vehicles?category=${category.id}`} 
+              <button 
+                onClick={() => handleCategoryClick(category.id)} 
                 key={category.id}
                 className={`
                   whitespace-nowrap px-5 py-3 rounded-full text-sm font-medium transition-colors
-                  ${category.name === "Electric" 
+                  ${category.id === selectedCategory || (category.name === "Electric" && selectedCategory === "") 
                     ? "bg-black text-white" 
                     : "bg-gray-100 text-gray-800 hover:bg-gray-200"}
                 `}
               >
                 {category.name}
-              </Link>
+              </button>
             ))}
             
             <button className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-900 text-white absolute right-0 top-1/2 transform -translate-y-1/2">
