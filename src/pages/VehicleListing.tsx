@@ -137,7 +137,7 @@ const VehicleListing = () => {
                         <SelectValue placeholder="Any Make" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Any Make</SelectItem>
+                        <SelectItem value="any">Any Make</SelectItem>
                         {makes.map((make) => (
                           <SelectItem key={make} value={make}>{make}</SelectItem>
                         ))}
@@ -153,7 +153,7 @@ const VehicleListing = () => {
                         <SelectValue placeholder="Any Model" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Any Model</SelectItem>
+                        <SelectItem value="any">Any Model</SelectItem>
                         {models.map((model) => (
                           <SelectItem key={model} value={model}>{model}</SelectItem>
                         ))}
@@ -215,7 +215,7 @@ const VehicleListing = () => {
                         <SelectValue placeholder="Any Condition" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Any Condition</SelectItem>
+                        <SelectItem value="any">Any Condition</SelectItem>
                         <SelectItem value="New">New</SelectItem>
                         <SelectItem value="Used">Used</SelectItem>
                         <SelectItem value="Certified Pre-Owned">Certified Pre-Owned</SelectItem>
