@@ -1,7 +1,6 @@
-
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
-import { Car, Zap, Hybrid } from "lucide-react";
+import { Car, Zap, Battery } from "lucide-react";
 
 // Define the category type
 interface Category {
@@ -45,7 +44,7 @@ const categories: Category[] = [
     id: "hybrid",
     name: "Hybrid",
     description: "Fuel efficiency with electric assistance",
-    icon: <Hybrid className="h-6 w-6" />,
+    icon: <Battery className="h-6 w-6" />,
     imageUrl: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
   },
   {
