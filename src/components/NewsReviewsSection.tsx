@@ -2,24 +2,41 @@
 import { Button } from "@/components/ui/button";
 import { getArticles } from "@/data/articles";
 import { Link } from "react-router-dom";
-import NewsReviewCard from "./NewsReviewCard";
 import { ChevronRight } from "lucide-react";
 
 const NewsReviewsSection = () => {
   const articles = getArticles();
-  // Display only the most recent 3 articles on the homepage
-  const featuredArticles = articles.slice(0, 3);
+  // Display only the most recent 4 articles on the homepage
+  const featuredArticles = articles.slice(0, 4);
 
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">News & Reviews</h2>
-            <p className="text-gray-600 max-w-2xl">
-              Stay up-to-date with the latest automotive news, in-depth vehicle reviews, and expert opinions.
-            </p>
-          </div>
+        <h2 className="text-3xl font-bold text-gray-900 mb-8">News & reviews</h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {featuredArticles.map((article) => (
+            <Link 
+              key={article.id} 
+              to={`/articles/${article.slug}`}
+              className="group relative block h-64 overflow-hidden rounded-lg"
+            >
+              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-all z-10"></div>
+              <img 
+                src={article.image} 
+                alt={article.title}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
+                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-car-blue-400 transition-colors">
+                  {article.title}
+                </h3>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        <div className="mt-8 flex justify-center">
           <Link to="/articles">
             <Button 
               variant="outline"
@@ -29,12 +46,6 @@ const NewsReviewsSection = () => {
               <ChevronRight className="h-4 w-4 ml-1 transition-transform duration-300 group-hover:translate-x-1" />
             </Button>
           </Link>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredArticles.map((article) => (
-            <NewsReviewCard key={article.id} article={article} />
-          ))}
         </div>
       </div>
     </section>
