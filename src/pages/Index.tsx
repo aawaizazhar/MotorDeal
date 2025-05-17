@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import PopularCategories from "@/components/PopularCategories";
 import FilteredVehicles from "@/components/FilteredVehicles";
+import NewsReviewsSection from "@/components/NewsReviewsSection";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Vehicle, getFilteredVehicles } from "@/data/vehicles";
@@ -54,6 +55,8 @@ const Index = () => {
           vehicles={filteredVehicles} 
           category={selectedCategory || "Electric"}
         />
+        
+        <NewsReviewsSection />
         
         {/* Why Choose Us Section */}
         <section className="py-16">
