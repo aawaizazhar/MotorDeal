@@ -9,6 +9,14 @@ const NewsReviewsSection = () => {
   // Display only the most recent 4 articles on the homepage
   const featuredArticles = articles.slice(0, 4);
 
+  // Fallback image for broken links
+  const fallbackImage = "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80";
+
+  // Handler for image error
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = fallbackImage;
+  };
+
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
@@ -25,6 +33,7 @@ const NewsReviewsSection = () => {
               <img 
                 src={article.image} 
                 alt={article.title}
+                onError={handleImageError}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
               <div className="absolute bottom-0 left-0 right-0 p-6 z-20">

@@ -27,8 +27,8 @@ const SearchBar = () => {
     
     const params = new URLSearchParams();
     
-    if (make) params.append("make", make);
-    if (model) params.append("model", model);
+    if (make && make !== "any") params.append("make", make);
+    if (model && model !== "any") params.append("model", model);
     if (minPrice) params.append("minPrice", minPrice);
     if (maxPrice) params.append("maxPrice", maxPrice);
     
@@ -36,6 +36,14 @@ const SearchBar = () => {
       pathname: "/vehicles",
       search: params.toString()
     });
+  };
+
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>, setter: React.Dispatch<React.SetStateAction<string>>) => {
+    // Only allow numbers and empty string
+    const value = e.target.value;
+    if (value === '' || /^\d+$/.test(value)) {
+      setter(value);
+    }
   };
   
   return (
@@ -53,7 +61,7 @@ const SearchBar = () => {
           </SelectContent>
         </Select>
         
-        <Select value={model} onValueChange={setModel} disabled={!make}>
+        <Select value={model} onValueChange={setModel} disabled={!make || make === "any"}>
           <SelectTrigger className="bg-white">
             <SelectValue placeholder="Any Model" />
           </SelectTrigger>
@@ -67,22 +75,26 @@ const SearchBar = () => {
         
         <div className="relative">
           <Input
-            type="number"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
             placeholder="Min Price"
             className="pl-7 bg-white"
             value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
+            onChange={(e) => handlePriceChange(e, setMinPrice)}
           />
           <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500">$</span>
         </div>
         
         <div className="relative">
           <Input
-            type="number"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
             placeholder="Max Price"
             className="pl-7 bg-white"
             value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
+            onChange={(e) => handlePriceChange(e, setMaxPrice)}
           />
           <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500">$</span>
         </div>

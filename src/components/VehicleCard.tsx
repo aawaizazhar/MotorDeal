@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { Vehicle } from "@/data/vehicles";
+import { useState } from "react";
 
 interface VehicleCardProps {
   vehicle: Vehicle;
@@ -22,6 +23,11 @@ const VehicleCard = ({ vehicle }: VehicleCardProps) => {
     location
   } = vehicle;
   
+  // Fallback image for broken links
+  const fallbackImage = "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80";
+  
+  const [imgSrc, setImgSrc] = useState<string>(images[0] || fallbackImage);
+  
   // Format price with commas
   const formattedPrice = price.toLocaleString('en-US', {
     style: 'currency',
@@ -32,21 +38,20 @@ const VehicleCard = ({ vehicle }: VehicleCardProps) => {
   // Format mileage with commas
   const formattedMileage = mileage.toLocaleString('en-US');
   
+  const handleImageError = () => {
+    setImgSrc(fallbackImage);
+  };
+  
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow group">
       <Link to={`/vehicle/${id}`}>
         <div className="relative h-52 overflow-hidden bg-gray-100">
-          {images.length > 0 ? (
-            <img
-              src={images[0]}
-              alt={title}
-              className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
-            />
-          ) : (
-            <div className="flex items-center justify-center h-full bg-gray-200">
-              <span className="text-gray-400">No image available</span>
-            </div>
-          )}
+          <img
+            src={imgSrc}
+            alt={title}
+            onError={handleImageError}
+            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+          />
           
           <Badge className="absolute top-2 left-2 bg-car-red-500">
             {condition}
