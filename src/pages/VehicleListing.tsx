@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -13,6 +14,7 @@ import { Slider } from "@/components/ui/slider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import VehicleCard from "@/components/VehicleCard";
+import SearchBar from "@/components/SearchBar";
 import { Vehicle, getFilteredVehicles, getMakes, getModels, getPriceRange, getYearRange } from "@/data/vehicles";
 
 const VehicleListing = () => {
@@ -116,8 +118,22 @@ const VehicleListing = () => {
     <>
       <Navbar />
       <main className="pt-24 pb-16 min-h-screen">
-        <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-bold mb-8">Browse Vehicles</h1>
+        {/* Find your next car banner */}
+        <div className="bg-gray-900 text-white py-10">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <h1 className="text-4xl md:text-5xl font-bold mb-8">
+                Find your <span className="text-purple-400">next car</span>
+              </h1>
+              <div className="bg-gray-800 p-4 rounded-lg">
+                <SearchBar />
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="container mx-auto px-4 mt-10">
+          <h2 className="text-3xl font-bold mb-8">Browse Vehicles</h2>
           
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Filters Sidebar */}
