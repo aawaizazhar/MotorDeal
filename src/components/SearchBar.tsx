@@ -50,7 +50,7 @@ const SearchBar = () => {
     <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-3">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 flex-grow">
         <Select value={make} onValueChange={setMake}>
-          <SelectTrigger className="bg-white">
+          <SelectTrigger className="bg-white text-gray-800">
             <SelectValue placeholder="Any Make" />
           </SelectTrigger>
           <SelectContent>
@@ -62,7 +62,7 @@ const SearchBar = () => {
         </Select>
         
         <Select value={model} onValueChange={setModel} disabled={!make || make === "any"}>
-          <SelectTrigger className="bg-white">
+          <SelectTrigger className="bg-white text-gray-800">
             <SelectValue placeholder="Any Model" />
           </SelectTrigger>
           <SelectContent>
@@ -79,7 +79,7 @@ const SearchBar = () => {
             inputMode="numeric"
             pattern="[0-9]*"
             placeholder="Min Price"
-            className="pl-7 bg-white"
+            className="pl-7 bg-white text-gray-800"
             value={minPrice}
             onChange={(e) => handlePriceChange(e, setMinPrice)}
           />
@@ -92,7 +92,7 @@ const SearchBar = () => {
             inputMode="numeric"
             pattern="[0-9]*"
             placeholder="Max Price"
-            className="pl-7 bg-white"
+            className="pl-7 bg-white text-gray-800"
             value={maxPrice}
             onChange={(e) => handlePriceChange(e, setMaxPrice)}
           />
