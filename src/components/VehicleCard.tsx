@@ -1,9 +1,7 @@
-
 import { Link } from "react-router-dom";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import type { Vehicle } from "@/data/vehicles";
 import { useState } from "react";
+import { Gauge, Fuel, Settings, Car } from "lucide-react";
 
 interface VehicleCardProps {
   vehicle: Vehicle;
@@ -20,101 +18,115 @@ const VehicleCard = ({ vehicle }: VehicleCardProps) => {
     model,
     images,
     condition,
-    location
+    transmission = "Auto",
+    fuelType = "Petrol",
+    engineSize = "4.0L",
+    horsePower = "150"
   } = vehicle;
   
   // Fallback image for broken links
-  const fallbackImage = "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80";
+  const fallbackImage = "images/vehicles/fallback.avif";
   
   const [imgSrc, setImgSrc] = useState<string>(images[0] || fallbackImage);
-  
-  // Format price with commas
-  const formattedPrice = price.toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0
-  });
-  
-  // Format mileage with commas
-  const formattedMileage = mileage.toLocaleString('en-US');
   
   const handleImageError = () => {
     setImgSrc(fallbackImage);
   };
   
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow group">
-      <Link to={`/vehicle/${id}`}>
-        <div className="relative h-52 overflow-hidden bg-gray-100">
-          <img
-            src={imgSrc}
-            alt={title}
-            onError={handleImageError}
-            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
-          />
-          
-          <Badge className="absolute top-2 left-2 bg-car-red-500">
-            {condition}
-          </Badge>
+    <div className="bg-white rounded-xl shadow-md overflow-hidden group">
+      {/* Image Container */}
+      <div className="relative overflow-hidden aspect-[3/2]">
+        <img
+          src={imgSrc}
+          alt={title}
+          onError={handleImageError}
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+        {/* Condition Badge */}
+        <div className="absolute top-4 left-4 z-10">
+          <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+            vehicle.condition === 'New' 
+              ? 'bg-green-500 text-white' 
+              : 'bg-gray-800 text-white'
+          }`}>
+            {vehicle.condition}
+          </span>
         </div>
-      </Link>
+      </div>
       
-      <CardContent className="pt-4">
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="font-bold text-lg leading-tight">
-            <Link to={`/vehicle/${id}`} className="hover:text-car-blue-700">
-              {title}
-            </Link>
-          </h3>
-          <span className="font-bold text-lg text-car-blue-800">{formattedPrice}</span>
-        </div>
-        
-        <div className="text-sm text-gray-500">
-          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2">
-            <div className="flex items-center">
-              <svg className="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M12 2V4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M12 20V22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M4.93 4.93L6.34 6.34" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M17.66 17.66L19.07 19.07" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 12H4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M20 12H22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M4.93 19.07L6.34 17.66" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M17.66 6.34L19.07 4.93" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              <span>{year}</span>
+      {/* Content Container */}
+      <div className="p-4">
+        {/* Header with brand logo, name, year, condition, and rating */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center p-2">
+              <img 
+                src={`https://ui-avatars.com/api/?name=${make.charAt(0)}&background=random&color=fff&bold=true&size=40`} 
+                alt={make} 
+                className="w-6 h-6 object-contain"
+              />
             </div>
-            <div className="flex items-center">
-              <svg className="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19 17H5C3.89543 17 3 16.1046 3 15V5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V15C21 16.1046 20.1046 17 19 17Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M3 8H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M7 21H17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M7 17V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M17 17V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              <span>{formattedMileage} mi</span>
-            </div>
-            <div className="flex items-center">
-              <svg className="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 7.61305 3.94821 5.32387 5.63604 3.63604C7.32387 1.94821 9.61305 1 12 1C14.3869 1 16.6761 1.94821 18.364 3.63604C20.0518 5.32387 21 7.61305 21 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M12 13C13.6569 13 15 11.6569 15 10C15 8.34315 13.6569 7 12 7C10.3431 7 9 8.34315 9 10C9 11.6569 10.3431 13 12 13Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              <span>{location}</span>
+            <div>
+              <h3 className="font-bold text-gray-900 text-lg">{make} {model}</h3>
+              <p className="text-sm text-gray-500">{year} • {vehicle.bodyStyle}</p>{/* Assuming bodyStyle is used here */} 
             </div>
           </div>
+          {/* Star Rating */}
+          <div className="flex items-center text-amber-500">
+            <svg className="w-4 h-4 fill-current mr-1" viewBox="0 0 20 20">
+              <path d="M10 15l-5.878 3.09 1.123-6.545L.489 7.069l6.572-.955L10 0l2.939 6.114 6.572.955-4.736 4.476 1.123 6.545z"/>
+            </svg>
+            <span className="text-sm font-medium">5.0</span>
+          </div>
         </div>
-      </CardContent>
-      
-      <CardFooter className="pt-0 pb-4 px-6">
-        <Link 
-          to={`/vehicle/${id}`}
-          className="w-full text-center py-2 text-car-blue-700 font-medium border border-car-blue-600 rounded-md hover:bg-car-blue-50 transition-colors"
-        >
-          View Details
-        </Link>
-      </CardFooter>
-    </Card>
+        
+        {/* Quick Specs */}
+        <div className="grid grid-cols-4 gap-2 mb-4 p-3 bg-gray-100 rounded-lg">
+          <div className="flex flex-col items-center justify-center">
+            <svg className="w-5 h-5 text-blue-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            <span className="text-xs font-medium text-gray-800">{Math.floor(mileage / 1000)}k km</span>
+          </div>
+          <div className="flex flex-col items-center justify-center">
+            <svg className="w-5 h-5 text-amber-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span className="text-xs font-medium text-gray-800">{engineSize}</span>
+          </div>
+          <div className="flex flex-col items-center justify-center">
+            <svg className="w-5 h-5 text-green-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+            </svg>
+            <span className="text-xs font-medium text-gray-800">{fuelType}</span>
+          </div>
+          <div className="flex flex-col items-center justify-center">
+            <svg className="w-5 h-5 text-purple-500 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+            </svg>
+            <span className="text-xs font-medium text-gray-800">{transmission}</span>
+          </div>
+        </div>
+        
+        {/* Price and Button */}
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs text-gray-500">Price</p>
+            <p className="text-2xl font-bold text-gray-900">PKR {price.toLocaleString()}</p>
+          </div>
+          <Link 
+            to={`/vehicle/${id}`}
+            className="bg-pink-600 hover:bg-pink-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center group"
+          >
+            <span>Details</span>
+            <svg className="w-4 h-4 ml-1 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </Link>
+        </div>
+      </div>
+    </div>
   );
 };
 

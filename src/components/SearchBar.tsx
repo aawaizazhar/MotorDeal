@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,11 +16,21 @@ const SearchBar = () => {
   const navigate = useNavigate();
   const [make, setMake] = useState<string>("");
   const [model, setModel] = useState<string>("");
-  const [minPrice, setMinPrice] = useState<string>("");
-  const [maxPrice, setMaxPrice] = useState<string>("");
+  const [condition, setCondition] = useState<string>("");
+  const [searchText, setSearchText] = useState<string>("");
+  const [availableModels, setAvailableModels] = useState<string[]>([]);
   
   const makes = getMakes();
-  const models = getModels(make);
+  
+  useEffect(() => {
+    if (make && make !== "any") {
+      setAvailableModels(getModels(make));
+      setModel("");
+    } else {
+      setAvailableModels([]);
+      setModel("");
+    }
+  }, [make]);
   
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,79 +39,81 @@ const SearchBar = () => {
     
     if (make && make !== "any") params.append("make", make);
     if (model && model !== "any") params.append("model", model);
-    if (minPrice) params.append("minPrice", minPrice);
-    if (maxPrice) params.append("maxPrice", maxPrice);
+    if (condition && condition !== "any") params.append("condition", condition);
+    if (searchText) params.append("query", searchText);
     
     navigate({
       pathname: "/vehicles",
       search: params.toString()
     });
   };
-
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>, setter: React.Dispatch<React.SetStateAction<string>>) => {
-    // Only allow numbers and empty string
-    const value = e.target.value;
-    if (value === '' || /^\d+$/.test(value)) {
-      setter(value);
-    }
-  };
   
   return (
-    <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-3">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 flex-grow">
-        <Select value={make} onValueChange={setMake}>
-          <SelectTrigger className="bg-white text-gray-800">
-            <SelectValue placeholder="Any Make" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="any">Any Make</SelectItem>
-            {makes.map((make) => (
-              <SelectItem key={make} value={make}>{make}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        
-        <Select value={model} onValueChange={setModel} disabled={!make || make === "any"}>
-          <SelectTrigger className="bg-white text-gray-800">
-            <SelectValue placeholder="Any Model" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="any">Any Model</SelectItem>
-            {models.map((model) => (
-              <SelectItem key={model} value={model}>{model}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        
-        <div className="relative">
-          <Input
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            placeholder="Min Price"
-            className="pl-7 bg-white text-gray-800"
-            value={minPrice}
-            onChange={(e) => handlePriceChange(e, setMinPrice)}
-          />
-          <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+    <form onSubmit={handleSearch} className="flex flex-col md:flex-row items-center bg-white rounded-lg shadow-md overflow-hidden mx-auto max-w-5xl">
+      <div className="flex flex-col md:flex-row w-full">
+        {/* Car Make */}
+        <div className="w-full md:w-1/4 px-1">
+          <Select value={make} onValueChange={setMake}>
+            <SelectTrigger className="border-0 focus:ring-0 h-14 text-gray-700 font-medium">
+              <SelectValue placeholder="Car Make" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="any">Any Make</SelectItem>
+              {makes.map((make) => (
+                <SelectItem key={make} value={make}>{make}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         
-        <div className="relative">
+        {/* Car Type */}
+        <div className="w-full md:w-1/4 px-1 border-l border-gray-200">
+          <Select value={model} onValueChange={setModel}>
+            <SelectTrigger className="border-0 focus:ring-0 h-14 text-gray-700 font-medium">
+              <SelectValue placeholder="Car Model" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="any">Any Model</SelectItem>
+              {availableModels.map((modelOption) => (
+                <SelectItem key={modelOption} value={modelOption}>{modelOption}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        
+        {/* Car Condition */}
+        <div className="w-full md:w-1/4 px-1 border-l border-gray-200">
+          <Select value={condition} onValueChange={setCondition}>
+            <SelectTrigger className="border-0 focus:ring-0 h-14 text-gray-700 font-medium">
+              <SelectValue placeholder="Car Condition" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="any">Any Condition</SelectItem>
+              <SelectItem value="New">New</SelectItem>
+              <SelectItem value="Used">Used</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        
+        {/* Search Input */}
+        <div className="w-full md:w-1/4 px-1 border-l border-gray-200">
           <Input
             type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            placeholder="Max Price"
-            className="pl-7 bg-white text-gray-800"
-            value={maxPrice}
-            onChange={(e) => handlePriceChange(e, setMaxPrice)}
+            placeholder="Search any car"
+            className="border-0 focus:ring-0 h-14 text-gray-700 font-medium"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
           />
-          <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500">$</span>
         </div>
       </div>
       
-      <Button type="submit" className="bg-car-blue-800 hover:bg-car-blue-900 text-white min-w-20">
-        Search
+      <Button 
+        type="submit" 
+        className="bg-car-red-500/90 backdrop-blur-md hover:bg-car-red-600 text-white h-14 w-full md:w-auto px-8 font-medium border border-car-red-400/30 shadow-md transition-all duration-300"
+        style={{ backdropFilter: 'blur(12px)' }}
+      >
+        <Search className="mr-2 h-4 w-4" />
+        SEARCH
       </Button>
     </form>
   );
